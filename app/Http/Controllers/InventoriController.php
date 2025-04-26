@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ class InventoriController extends Controller
     // Tampilkan halaman dashboard inventori
     public function dashboardInventori()
     {
+        // Overall statistics
         $items = Item::all();
         $stokTotal = $items->sum('quantity');
         $totalNilaiStok = $items->sum(function ($item) {
@@ -24,19 +26,37 @@ class InventoriController extends Controller
         $jumlahCategory = Category::count();
         $jumlahSupplier = Supplier::count();
 
-        // ringkasan untuk kategoti makanan
-        $itemsMakanan = $items->where('category_id', 1);
-        $jumlahItemMakanan = $itemsMakanan->count();
-        $totalNilaiStokMakanan = $itemsMakanan->sum(function ($itemMakanan) {
-            return $itemMakanan->quantity * $itemMakanan->price;
-        });
-        $rataRataHargaMakanan = $itemsMakanan->avg('price');
+        // Category summaries
+        $categorySummaries = Category::select(
+            'categories.name',
+            DB::raw('COUNT(items.id) as item_count'),
+            DB::raw('SUM(items.quantity * items.price) as total_value'),
+            DB::raw('AVG(items.price) as avg_price')
+        )
+        ->leftJoin('items', 'categories.id', '=', 'items.category_id')
+        ->groupBy('categories.id', 'categories.name')
+        ->get();
 
-     
+        // Supplier summaries
+        $supplierSummaries = Supplier::select(
+            'suppliers.name',
+            DB::raw('COUNT(items.id) as item_count'),
+            DB::raw('SUM(items.quantity * items.price) as total_value')
+        )
+        ->leftJoin('items', 'suppliers.id', '=', 'items.supplier_id')
+        ->groupBy('suppliers.id', 'suppliers.name')
+        ->get();
 
-        return view('inventori.dashboard', compact(['stokTotal', 'totalNilaiStok', 'rataRataHarga',
-    'jumlahItem', 'jumlahCategory', 'jumlahSupplier', 'itemsMakanan', 'jumlahItemMakanan',
-'totalNilaiStokMakanan', 'rataRataHargaMakanan']));
+        return view('inventori.dashboard', compact(
+            'stokTotal',
+            'totalNilaiStok',
+            'rataRataHarga',
+            'jumlahItem',
+            'jumlahCategory',
+            'jumlahSupplier',
+            'categorySummaries',
+            'supplierSummaries'
+        ));
     }
 
     public function showUrgentStock()

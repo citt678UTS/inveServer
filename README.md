@@ -1,6 +1,6 @@
 halo teman teman saya obed danny. Pada kesempatan kali ini saya akan membuat projek inventaris yang berkaitan dengan pemasok barang dan juga kategori barang menggunakan framework laravel dan di projek ini saya menggunakan docker untuk konfigurasi backend laravel seperti image php dan image composer dan konfigurasi image database MySQL. 
 
-Saya mengerjakan soal : 1,2,3,4,5,7,9
+Saya mengerjakan soal : 1,2,3,4,5,6,7,8,9
 
 PEMBERITAHUAN PENTING :
 DI SINI SAYA MENGGUNAKAN AKUN GITHUB LAIN KHUSUS UJIAN AGAR TERHINDAR DARI ORANG/TEMAN YANG INGIN MELAKUKAN CLONE TERHADAP REPO INI
@@ -34,4 +34,4 @@ Untuk masuk ke dalam container aplikasi laravel saya di docker. Setelah masuk ja
 10. Setelah semuanya jadi tinggal akses web laravel di 
 http://localhost:8080 dan lakukan pengujian
 
-11. Untuk jawaban soal 4,7,9 ada di halaman dashboard aplikasi laravel dengan http://localhost:8080/inventori
+11. Untuk jawaban soal 4,6,7,8,9 ada di halaman dashboard aplikasi laravel dengan http://localhost:8080/inventori
